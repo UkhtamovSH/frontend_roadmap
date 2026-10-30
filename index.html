@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Frontend Roadmap — Junior → Senior</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Manrope:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EDF0F4; --surface:#FFFFFF; --ink:#14213D; --muted:#5B6478; --line:#D5DAE3;
+  --j:#1F8A5B; --m:#C27C00; --s:#6D43CF; --accent:var(--j);
+  --check-bg:#E6EAF0;
+  color-scheme:light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#101626; --surface:#18203A; --ink:#E7EBF3; --muted:#98A2B8; --line:#2A3555;
+    --j:#3CC48A; --m:#F0A92E; --s:#A383F5; --check-bg:#232D4A; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#101626; --surface:#18203A; --ink:#E7EBF3; --muted:#98A2B8; --line:#2A3555;
+  --j:#3CC48A; --m:#F0A92E; --s:#A383F5; --check-bg:#232D4A; color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 80px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Manrope,system-ui,-apple-system,"Segoe UI",sans-serif}
+body[data-level="middle"]{--accent:var(--m)}
+body[data-level="senior"]{--accent:var(--s)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+h1,h2,h3{font-family:Unbounded,Manrope,system-ui,sans-serif;font-weight:700;margin:0;line-height:1.15}
+button,input{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:4px}
+
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+
+/* Hero: the ladder */
+.hero{padding:40px 0 28px}
+.hero h1{font-size:clamp(28px,5vw,48px);letter-spacing:-.02em;max-width:16ch}
+.hero p{color:var(--muted);max-width:60ch;margin:12px 0 28px}
+.ladder{display:grid;gap:10px}
+.rung{display:grid;grid-template-columns:minmax(130px,200px) 1fr auto;align-items:center;gap:16px;
+  background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 18px;cursor:pointer;text-align:left;width:100%;
+  border-left:8px solid var(--c)}
+.rung[aria-current="true"]{box-shadow:0 0 0 2px var(--c) inset}
+.rung .name{font-family:Unbounded,sans-serif;font-weight:500;font-size:15px}
+.rung .sub{display:block;color:var(--muted);font-size:13px;font-family:Manrope,sans-serif}
+.bar{height:14px;background:var(--check-bg);border-radius:7px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--c);border-radius:7px;transition:width .4s ease}
+.rung .pct{font-family:Unbounded,sans-serif;font-size:20px;min-width:4ch;text-align:right;color:var(--c)}
+.rung:nth-child(1){--c:var(--j);margin-left:0}
+.rung:nth-child(2){--c:var(--m);margin-left:clamp(0px,4vw,48px)}
+.rung:nth-child(3){--c:var(--s);margin-left:clamp(0px,8vw,96px)}
+.rung:nth-child(2),.rung:nth-child(3){width:auto}
+
+/* Toolbar */
+.toolbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding:12px 0;border-bottom:1px solid var(--line)}
+.toolbar .wrap{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.search{flex:1 1 240px;min-width:0;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+.btn{padding:9px 14px;border:1px solid var(--line);border-radius:10px;background:var(--surface);cursor:pointer;white-space:nowrap}
+.btn[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn:hover{border-color:var(--accent)}
+
+/* Layout */
+.layout{display:grid;grid-template-columns:240px 1fr;gap:28px;padding:28px 0 60px}
+.side{position:sticky;top:calc(env(safe-area-inset-top,0px) + 76px);align-self:start;max-height:calc(100vh - 100px);overflow:auto}
+.side a{display:flex;justify-content:space-between;gap:8px;padding:7px 10px;border-radius:8px;color:var(--ink);text-decoration:none;font-size:14px}
+.side a:hover{background:var(--surface)}
+.side a small{color:var(--muted);font-variant-numeric:tabular-nums}
+.side a.full small{color:var(--accent);font-weight:700}
+@media (max-width:820px){
+  .layout{grid-template-columns:1fr}
+  .side{position:static;max-height:none;display:flex;gap:6px;overflow-x:auto;padding-bottom:4px}
+  .side a{flex:0 0 auto;background:var(--surface);border:1px solid var(--line)}
+  .rung{grid-template-columns:1fr auto}
+  .rung .bar{grid-column:1/-1;grid-row:2}
+  .rung:nth-child(n){margin-left:0}
+}
+
+.cat{margin-bottom:40px}
+.cat-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;border-bottom:3px solid var(--accent);padding-bottom:8px;margin-bottom:14px}
+.cat-head h2{font-size:clamp(20px,3vw,26px)}
+.cat-head span{color:var(--muted);font-size:14px;font-variant-numeric:tabular-nums}
+
+details.topic{background:var(--surface);border:1px solid var(--line);border-radius:12px;margin-bottom:10px}
+details.topic summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;padding:14px 16px}
+details.topic summary::-webkit-details-marker{display:none}
+.t-title{font-weight:700}
+.t-title::before{content:"+";display:inline-block;width:1.2em;color:var(--accent);font-weight:700}
+details[open] .t-title::before{content:"−"}
+.t-meta{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.mini{width:70px;height:6px;background:var(--check-bg);border-radius:3px;overflow:hidden}
+.mini i{display:block;height:100%;background:var(--accent);width:0}
+details.topic.done{border-color:var(--accent)}
+details.topic.done .t-title{color:var(--accent)}
+
+.items{list-style:none;margin:0;padding:0 16px 14px;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:4px 16px}
+.items label{display:flex;gap:10px;align-items:flex-start;padding:5px 6px;border-radius:6px;cursor:pointer;font-size:15px}
+.items label:hover{background:var(--check-bg)}
+.items input{appearance:none;flex:0 0 18px;width:18px;height:18px;margin-top:3px;border:2px solid var(--muted);border-radius:5px;display:grid;place-items:center;cursor:pointer}
+.items input:checked{background:var(--accent);border-color:var(--accent)}
+.items input:checked::after{content:"";width:9px;height:5px;border:2px solid #fff;border-top:0;border-right:0;transform:rotate(-45deg) translate(1px,-1px)}
+.items input:checked + span{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--accent)}
+.t-actions{padding:0 16px 14px}
+.t-actions button{font-size:13px;background:none;border:0;color:var(--accent);cursor:pointer;padding:4px 0;font-weight:700}
+mark{background:color-mix(in srgb,var(--accent) 30%,transparent);color:inherit;border-radius:3px}
+
+.projects{background:var(--surface);border:2px dashed var(--accent);border-radius:14px;padding:20px}
+.projects h2{font-size:22px;margin-bottom:4px}
+.projects p{margin:0 0 14px;color:var(--muted)}
+.projects ol{margin:0;padding-left:0;list-style:none;counter-reset:p}
+.projects li{counter-increment:p}
+.projects label{display:flex;gap:12px;align-items:center;padding:8px 6px;border-radius:8px;cursor:pointer}
+.projects label:hover{background:var(--check-bg)}
+.projects label::before{content:counter(p);font-family:Unbounded,sans-serif;font-size:13px;width:28px;height:28px;flex:0 0 28px;border-radius:50%;display:grid;place-items:center;border:2px solid var(--accent);color:var(--accent)}
+.projects input{position:absolute;opacity:0;pointer-events:none}
+.projects label:has(input:checked)::before{background:var(--accent);color:#fff;content:"✓"}
+.projects label:has(input:checked) span{text-decoration:line-through;color:var(--muted)}
+.projects label:has(input:focus-visible){outline:3px solid var(--accent)}
+
+.empty{padding:40px 0;color:var(--muted)}
+footer{border-top:1px solid var(--line);padding:20px 0 40px;color:var(--muted);font-size:14px}
+footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body data-level="junior">
+
+<header class="hero wrap">
+  <h1>Frontend dasturchi yo‘l xaritasi</h1>
+  <p>Juniordan Seniorgacha bo‘lgan barcha mavzular. O‘rgangan bandingizni belgilang — progress shu brauzerda saqlanadi.</p>
+  <div class="ladder" id="ladder"></div>
+</header>
+
+<div class="toolbar">
+  <div class="wrap">
+    <input class="search" id="q" type="search" placeholder="Mavzu qidirish: masalan, useEffect, CORS, Grid…" aria-label="Mavzu qidirish">
+    <button class="btn" id="onlyLeft" aria-pressed="false">Faqat qolganlar</button>
+    <button class="btn" id="toggleAll">Hammasini ochish</button>
+    <button class="btn" id="theme" aria-label="Rejimni almashtirish">Rejim</button>
+  </div>
+</div>
+
+<div class="wrap layout">
+  <nav class="side" id="side" aria-label="Bo‘limlar"></nav>
+  <main id="main"></main>
+</div>
+
+<footer>
+  <div class="wrap">
+    <span id="totalStat"></span>
+    <button class="btn" id="reset">Joriy darajani tozalash</button>
+  </div>
+</footer>
+
+<script type="text/plain" id="data">
+@junior|Junior Frontend Developer|Boshlang‘ich professional daraja
+#HTML
+HTML Fundamentals: HTML nima va qanday ishlaydi?|HTML document structure|DOCTYPE|html, head, body|HTML elements va tags|Opening va closing tags|Attributes|Nested elements|Block va inline elements|Void elements
+Semantic HTML: Semantic va non-semantic elements|header, footer, main|nav, section, article|aside|figure, figcaption|address|Heading hierarchy: H1–H6|Semantic structure
+Forms: Form element|Input types|Text, password, email, number|Checkbox va radio|Select va option|Textarea|Label va placeholder|Required va disabled|Min, max, minlength, maxlength|Pattern validation|Form submission|GET va POST|FormData API
+Tables: Table structure|table, thead, tbody, tfoot|tr, th, td|colspan, rowspan|Table accessibility|Responsive tables
+SEO Basics: Title tag|Meta description|Meta keywords tushunchasi|Meta robots|Canonical URL|Open Graph|Twitter Cards|Heading structure|Image alt|Sitemap|Robots.txt|Structured Data basics
+Accessibility: WCAG fundamentals|ARIA attributes|ARIA roles|Accessible forms|Keyboard navigation|Tabindex|Focus management|Screen readers|Color contrast|Alt text
+HTML Attributes: Global attributes|ID va class|Data attributes|contenteditable|hidden|tabindex|title|draggable|loading|target, rel|download
+#CSS
+CSS Fundamentals: CSS syntax|Selectors|Element selector|Class va ID selectors|Universal selector|Attribute selectors|Combinators|Specificity|Inheritance|Cascade|CSS reset|External, internal, inline CSS
+Box Model: Content|Padding|Border|Margin|Width va height|Min-width va max-width|Box-sizing|Margin collapsing|Overflow
+Display: Block|Inline|Inline-block|None|Flex|Grid|Contents|Visibility hidden va display none farqi
+Position: Static|Relative|Absolute|Fixed|Sticky|Top, right, bottom, left|Z-index|Stacking context|Containing block
+Flexbox: Flex container|Flex items|Flex-direction|Justify-content|Align-items|Align-content|Flex-wrap|Flex-grow|Flex-shrink|Flex-basis|Gap|Align-self|Order
+CSS Grid: Grid container|Grid items|Grid-template-columns|Grid-template-rows|Grid-gap|Grid-area|Grid-column|Grid-row|Repeat()|Minmax()|Auto-fit|Auto-fill|Implicit va explicit grid
+Media Queries: Media types|Min-width|Max-width|Breakpoints|Mobile-first|Desktop-first|Orientation|prefers-reduced-motion|prefers-color-scheme
+Responsive Design: Fluid layouts|Relative units|%, rem, em, vw, vh|Responsive typography|Responsive images|Mobile navigation|Responsive grids|Container queries basics
+Pseudo-classes: Hover|Active|Focus|Focus-visible|Focus-within|First-child|Last-child|Nth-child|Not|Checked|Disabled|Valid va invalid
+Pseudo-elements: Before|After|First-letter|First-line|Placeholder|Selection|Marker|Backdrop
+CSS Variables: Custom properties|Root variables|var()|Fallback values|Theme variables|Dynamic theming
+Transitions va Animations: Transition-property|Transition-duration|Transition-timing-function|Transform|Translate, rotate, scale|Keyframes|Animation-duration|Animation-delay|Animation-iteration-count|Animation-fill-mode|Animation-direction
+Tailwind CSS: Utility-first CSS|Installation|Configuration|Spacing|Typography|Colors|Flexbox utilities|Grid utilities|Responsive prefixes|Hover va focus variants|Dark mode|Arbitrary values|Reusable component patterns|Custom theme|Tailwind CSS v4 fundamentals
+#JavaScript
+JavaScript Fundamentals: JavaScript nima?|JavaScript engine|JavaScript browserda qanday ishlaydi?|ECMAScript|Strict mode|Statements va expressions|Comments|Semicolons
+Variables: var|let|const|Declaration va initialization|Reassignment|Redeclaration|Temporal Dead Zone
+Data Types: String|Number|Boolean|Undefined|Null|Symbol|BigInt|Object|Primitive va reference types|typeof|Type conversion|Type coercion|Truthy va falsy
+Operators: Arithmetic operators|Assignment operators|Comparison operators|Logical operators|Ternary operator|Nullish coalescing|Optional chaining|Unary operators|Equality: == va ===|Operator precedence
+Conditions: if|else|else if|switch|Nested conditions|Ternary conditions
+Loops: for|while|do while|for...of|for...in|break|continue|Nested loops
+Functions: Function declaration|Function expression|Arrow functions|Parameters va arguments|Default parameters|Return|Callback functions|Higher-order functions|Pure functions|IIFE|Function composition
+Arrays: Array creation|Array indexing|Array length|Add va remove elements|push, pop|shift, unshift|slice, splice|concat|includes|indexOf|sort|reverse|flat|flatMap
+Array Methods: map|filter|reduce|find|findIndex|forEach|some|every|sort|reduceRight
+Objects: Object creation|Properties|Methods|Nested objects|Object destructuring|Object.keys|Object.values|Object.entries|Object.assign|Object.freeze|Object.seal|Computed properties|Property shorthand|Optional properties
+Destructuring: Array destructuring|Object destructuring|Default values|Nested destructuring|Renaming properties|Function parameter destructuring
+Spread va Rest: Spread arrays|Spread objects|Rest parameters|Copying arrays|Copying objects|Merging data|Shallow copy limitations
+Template Literals: String interpolation|Multiline strings|Expression embedding|Tagged templates basics
+Scope: Global scope|Function scope|Block scope|Lexical scope|Scope chain
+Hoisting: var hoisting|let va const hoisting|Function hoisting|Temporal Dead Zone
+Closures: Lexical environment|Outer function variables|Inner function access|Data privacy|Closure use cases|Closure va memory
+DOM Manipulation: DOM tree|document object|querySelector|querySelectorAll|getElementById|createElement|append|prepend|remove|classList|setAttribute|getAttribute|innerHTML|textContent|DOM traversal
+Events: Event listeners|Click|Input|Change|Submit|Keyboard events|Mouse events|Event object|preventDefault|stopPropagation|Event delegation|Event bubbling|Event capturing
+Promises: Promise states|Pending|Fulfilled|Rejected|Promise constructor|resolve|reject|then|catch|finally|Promise chaining
+Async/Await: Async functions|Await|Error handling|Sequential execution|Parallel execution|Async control flow
+Fetch API: HTTP requests|GET|POST|PUT|PATCH|DELETE|Request headers|Request body|Response object|JSON parsing|HTTP status checking|AbortController|Request cancellation
+Error Handling: Syntax errors|Runtime errors|Logical errors|try/catch|finally|throw|Custom errors|Error object
+ES Modules: import|export|Default export|Named export|Re-export|Dynamic import|Module scope
+Storage: LocalStorage|SessionStorage|Cookies basics|setItem|getItem|removeItem|clear|JSON.stringify|JSON.parse|Storage limitations
+#React
+React Fundamentals: React nima?|React va Vanilla JavaScript farqi|SPA tushunchasi|Virtual DOM tushunchasi|React project structure|React rendering|React reconciliation basics|Declarative UI|Component-based architecture
+JSX: JSX syntax|JSX expressions|JavaScript inside JSX|JSX attributes|Fragments|Conditional JSX|JSX limitations
+Components: Functional components|Component composition|Reusable components|Parent va child components|Component props|Component naming|Component separation
+Props: Props passing|Props destructuring|Default props|Children prop|Props drilling|Read-only props
+State: State nima?|State management basics|State updates|State immutability|State batching|Derived state|Multiple states
+useState: useState syntax|Initial state|Functional updates|Object state|Array state|State updates|State immutability
+useEffect: Effect lifecycle|Dependency array|Empty dependency array|Cleanup function|API requests|Event subscriptions|Timers|Infinite loop prevention|Effect dependencies
+useRef: DOM references|Mutable values|Persistent values|Previous values|useRef va useState farqi
+useContext: Context API|createContext|Provider|useContext|Global data sharing|Context limitations
+Conditional Rendering: if conditions|Ternary rendering|Logical AND|Conditional components|Loading states|Error states|Empty states
+Lists va Keys: Array rendering|map()|Unique keys|Key importance|Index key limitations|Dynamic lists
+Forms: Form handling|Input handling|Form submission|Form validation|Multiple inputs|Checkbox|Radio|Select|Textarea
+Controlled Components: Controlled inputs|Uncontrolled inputs|Value management|onChange|Form state|Input validation
+React Router: Router setup|BrowserRouter|Routes|Route|Link|NavLink|useNavigate|useParams|useLocation|Nested routes|Dynamic routes|Protected routes|Not Found pages
+Custom Hooks: Custom Hook rules|Hook naming|Reusable logic|useLocalStorage|useDebounce basics|useFetch basics
+Component Lifecycle: Mounting|Updating|Unmounting|Lifecycle va useEffect|Cleanup
+React DevTools: Components panel|Props inspection|State inspection|Profiler basics|Component debugging
+#TypeScript
+Basic Types: string|number|boolean|null|undefined|any|unknown|never|void|object|arrays|tuples|enums|literal types
+Interfaces: Interface declaration|Optional properties|Readonly properties|Extending interfaces|Interface merging|Index signatures
+Type Aliases: Type declaration|Object types|Union aliases|Intersection aliases|Type composition|Interface va type farqi
+Union Types: Union syntax|Multiple types|Literal unions|Type narrowing|Discriminated unions basics
+Intersection Types: Intersection syntax|Combining object types|Type composition
+Functions Typing: Parameter types|Return types|Optional parameters|Default parameters|Rest parameters|Function signatures|Callback typing
+Optional Properties: Optional properties|Readonly|Optional chaining|Nullish coalescing|Undefined handling
+Generics Basics: Generic functions|Generic interfaces|Generic types|Type parameters|Constraints basics
+React Props Typing: Props interfaces|Children typing|Event typing|useState typing|useRef typing|Component return types|Component prop composition
+API Response Typing: Response interfaces|Nested response types|Optional API fields|Generic API responses|Error response types|Type-safe fetch
+#Git va Tools
+Git: Version control|Git installation|git init|git status|git add|git commit|git log|git diff|git reset|git revert|git stash|.gitignore
+GitHub: Repository creation|Remote repository|Push|Pull|Clone|Fork|GitHub profile|README|Issues
+Branch: Branch creation|Branch switching|Branch naming|Feature branches|Main branch|Branch deletion
+Commit: Commit messages|Conventional Commits|Atomic commits|Commit history
+Merge: Fast-forward merge|Three-way merge|Merge conflicts|Conflict resolution|Rebase basics
+Pull Request: PR creation|PR description|Code review|PR approval|Merge strategies
+npm / pnpm: Node.js basics|npm installation|package.json|package-lock.json|pnpm-lock.yaml|Dependencies|DevDependencies|Scripts|Package installation|Package updates|Semantic versioning
+Vite: Vite architecture basics|Project creation|Development server|Build process|Environment variables|Aliases|Static assets|Production build
+VS Code: Extensions|Settings|Keyboard shortcuts|Integrated terminal|Debugger|Formatting|ESLint|Prettier
+Chrome DevTools: Elements|Console|Sources|Network|Application|Performance|Memory|Responsive mode|Breakpoints|Debugging
+Browser Network: HTTP requests|Request headers|Response headers|Payload|Status codes|Timing|Waterfall|Cache|CORS errors|API debugging
+*Responsive Landing Page
+*Admin Dashboard
+*Authentication UI
+*CRUD Application
+*REST API bilan Product Management
+*Search va Filter tizimi
+*Pagination
+*Multi-page React Application
+*Form Validation System
+*GitHub orqali jamoaviy loyiha
+@middle|Middle Frontend Developer|Mustaqil professional daraja
+#Advanced JavaScript
+Execution Context: Global Execution Context|Function Execution Context|Creation phase|Execution phase|Lexical Environment|Variable Environment|Scope chain|Execution context stack
+Call Stack: Call stack structure|Function execution order|Stack overflow|Recursion|Stack trace|Synchronous execution
+Event Loop: JavaScript runtime|Call Stack|Web APIs|Task Queue|Microtask Queue|Event Loop mechanism|Rendering cycle
+Microtasks va Macrotasks: Microtask queue|Macrotask queue|Promise callbacks|setTimeout|setInterval|queueMicrotask|Execution priority|Task scheduling
+Closures Deep Understanding: Lexical scope|Closure environment|Private variables|Function factories|Module pattern|Memory implications
+Prototype: Prototype chain|Object.prototype|Function.prototype|__proto__|Object.getPrototypeOf|Object.create|Constructor functions
+Prototypal Inheritance: Prototype inheritance|Inheritance chain|Property lookup|Method inheritance|Constructor inheritance
+this Keyword: Global this|Function this|Object method this|Arrow function this|Constructor this|Class this|Context loss
+Bind, Call, Apply: call()|apply()|bind()|Explicit binding|Implicit binding|Hard binding|Function borrowing
+Advanced Promises: Promise chaining|Promise resolution procedure|Promise error propagation|Promise composition|Promise execution order|Promise anti-patterns
+Promise Methods: Promise.all|Promise.allSettled|Promise.race|Promise.any|Promise.resolve|Promise.reject|Promise.withResolvers
+Debounce: Debounce mechanism|Leading execution|Trailing execution|Search optimization|Cancelable debounce
+Throttle: Throttle mechanism|Leading throttle|Trailing throttle|Scroll optimization|Resize optimization
+Shallow Copy va Deep Copy: Reference types|Object.assign|Spread operator|StructuredClone|JSON cloning limitations|Circular references|Nested objects
+Memory Management: Memory allocation|Stack memory|Heap memory|Memory leaks|Detached DOM nodes|Closures and memory|Memory profiling
+Garbage Collection: Reachability|Mark-and-sweep|Generational GC|Memory cleanup|GC performance
+Big O Notation: O(1)|O(log n)|O(n)|O(n log n)|O(n²)|Time complexity|Space complexity|Best, average, worst case|Algorithm analysis
+Web APIs: Fetch API|DOM API|Storage API|History API|Geolocation API|Intersection Observer|Resize Observer|Mutation Observer|WebSocket|Broadcast Channel|Clipboard API|Notification API
+#Advanced React
+Advanced Hooks: Hook execution model|Rules of Hooks|Hook composition|Hook dependencies|Custom Hook architecture
+useMemo: Memoization|Dependency management|Expensive calculations|Referential equality|Performance trade-offs
+useCallback: Function memoization|Dependency array|Referential stability|Child component optimization|useCallback vs useMemo
+useReducer: Reducer function|Initial state|Dispatch|Actions|Complex state management|Reducer composition
+useLayoutEffect: Synchronous DOM measurements|Layout calculations|Flicker prevention|useEffect comparison
+useTransition: Urgent updates|Non-urgent updates|isPending|Transition updates|UI responsiveness
+useDeferredValue: Deferred rendering|Expensive UI|Search interfaces|Deferred state updates
+useImperativeHandle: Imperative APIs|Ref customization|Parent-child communication|Component ref exposure
+Context Optimization: Context splitting|Provider architecture|Context re-rendering|Memoized providers|Context performance
+React.memo: Component memoization|Shallow comparison|Custom comparison|Memoization limitations
+Error Boundaries: Error boundary concepts|Error catching|Fallback UI|Error recovery|Logging errors|Limitations of error boundaries
+Compound Components: Component composition|Shared state|Context-based compound components|Flexible APIs|Reusable UI patterns
+Custom Hooks Architecture: Separation of concerns|Data fetching hooks|Form hooks|State hooks|Hook testing|Reusable business logic
+React Rendering Optimization: Render cycle|Re-render triggers|Parent-child rendering|State placement|Memoization|Profiling|Avoiding unnecessary renders
+Reconciliation: Reconciliation algorithm|Element identity|Key-based reconciliation|Component preservation|State preservation
+Virtual DOM: Virtual DOM concept|React elements|Diffing|DOM updates|Virtual DOM limitations
+Suspense: Suspense boundaries|Fallback UI|Lazy components|Async rendering|Suspense integration
+Lazy Loading: React.lazy|Dynamic imports|Code splitting|Route-based splitting|Component-level splitting
+#State Management
+Redux Toolkit: Redux fundamentals|Store|Reducers|Actions|Dispatch|Selectors|createSlice|configureStore|createAsyncThunk|RTK Query|Middleware|Redux DevTools|Normalized state
+Zustand: Store creation|State updates|Actions|Selectors|Slices pattern|Middleware|Persist middleware|DevTools middleware|Subscribe|Async actions|Store optimization
+TanStack Query: QueryClient|QueryClientProvider|useQuery|useMutation|Query keys|Query functions|Stale time|Garbage collection time|Cache invalidation|Refetching|Pagination|Infinite queries|Optimistic updates|Error handling|Query cancellation
+Server State: Server state concepts|Remote data|Data fetching|Caching|Synchronization|Refetching|Stale data|Cache invalidation
+Client State: Local state|UI state|Form state|Modal state|Sidebar state|Component state
+Global State: Global store|State sharing|Store architecture|State normalization|Selectors|State subscriptions
+Cache Management: Cache strategies|Cache keys|Cache invalidation|Cache expiration|Background refetch|Persistence|Cache synchronization
+Optimistic Updates: Optimistic UI|Temporary updates|Rollback|Mutation lifecycle|Error recovery
+Data Synchronization: Server-client synchronization|Background updates|Refetch intervals|WebSocket synchronization|Conflict handling|Offline synchronization basics
+#Advanced TypeScript
+Generics: Generic functions|Generic interfaces|Generic classes|Generic constraints|Default generic types|Multiple type parameters
+Utility Types: Partial|Required|Readonly|Pick|Omit|Record|Exclude|Extract|NonNullable|ReturnType|Parameters|Awaited|InstanceType
+Conditional Types: Conditional expressions|extends keyword|Nested conditional types|Distributive conditional types|Type inference
+Mapped Types: Mapping properties|keyof|Property modifiers|Optional mapping|Readonly mapping|Key remapping
+keyof: Key extraction|Key unions|Generic keyof|Indexed access
+typeof: Type inference|Value-to-type conversion|typeof with objects|typeof with functions
+infer: Type inference|Conditional infer|Return type extraction|Array element extraction
+Type Narrowing: typeof guards|instanceof|in operator|Equality narrowing|Truthiness narrowing|Custom type guards|Assertion functions
+Discriminated Unions: Discriminant properties|Tagged unions|Exhaustive checking|never type
+Advanced React Typing: Generic components|Polymorphic components|ComponentProps|HTML element props|Event types|Ref types|Children types|Higher-order component typing
+Type-safe API: API contracts|Generic API responses|Request types|Response types|Error types|Runtime validation|Zod|Type inference from schemas
+#Next.js
+Next.js Architecture: Next.js fundamentals|React vs Next.js|Rendering architecture|Project structure|File conventions|Routing architecture
+App Router: app directory|page.tsx / page.js|layout|template|loading|error|not-found|route groups|parallel routes|intercepting routes
+Server Components: React Server Components|Server rendering|Server-only code|Data fetching|Component boundaries|Server vs Client Components
+Client Components: use client|Client-side interactivity|Browser APIs|Event handling|State management|Hydration requirements
+Server Actions: Server functions|Form submissions|Mutations|Validation|Authentication|Revalidation|Security considerations
+SSR: Server-side rendering|Request-time rendering|Dynamic rendering|Server data fetching|SSR use cases
+SSG: Static generation|Build-time rendering|generateStaticParams|Static pages|Static data
+ISR: Incremental Static Regeneration|Revalidation time|On-demand revalidation|Static cache updates
+Hydration: Hydration process|Hydration mismatch|Client-server consistency|Hydration debugging
+Middleware: Middleware concepts|Request interception|Redirects|Rewrites|Authentication checks|Matcher configuration
+Dynamic Routing: Dynamic segments|Catch-all routes|Optional catch-all routes|Route parameters|Search parameters
+Metadata va SEO: Metadata API|Dynamic metadata|generateMetadata|Open Graph|Sitemap|Robots|Canonical URLs
+Caching: Data caching|Request memoization|Full Route Cache|Router Cache|Cache invalidation|Revalidation|Cache tags
+Image Optimization: next/image|Image sizing|Responsive images|Lazy loading|Priority loading|Remote image configuration
+#API va Backend Integration
+REST API: REST principles|Resources|Endpoints|JSON|API contracts|RESTful architecture
+HTTP Methods: GET|POST|PUT|PATCH|DELETE|OPTIONS|HEAD|Idempotency|Safe methods
+HTTP Status Codes: 1xx|2xx|3xx|4xx|5xx|Common status codes|Error response handling
+Authentication: Authentication concepts|Login|Register|Logout|Session-based authentication|Token-based authentication|OAuth 2.0 basics|OpenID Connect basics
+Authorization: Roles|Permissions|RBAC|Access control|Protected routes|Permission-based UI
+JWT: JWT structure|Header|Payload|Signature|Token validation|Expiration|Access token|Refresh token
+Cookies: Cookie creation|Cookie expiration|HttpOnly|Secure|SameSite|Domain|Path|Session cookies
+CORS: Same-origin policy|Cross-origin requests|CORS headers|Preflight requests|OPTIONS|Credentials
+Interceptors: Request interceptors|Response interceptors|Axios configuration|Global headers|Error interception
+Refresh Token: Access token expiration|Refresh flow|Token rotation|Concurrent requests|Refresh failure|Logout on expiration
+WebSockets: WebSocket connection|Opening connection|Sending messages|Receiving messages|Closing connection|Reconnection|Real-time UI
+Error Handling Architecture: API error structure|Global error handling|Network errors|Validation errors|Authentication errors|Retry logic|Error notifications|Logging
+#Testing
+Vitest: Installation|Configuration|Test files|describe|it / test|expect|Assertions|Setup files|Coverage|Mocking
+Jest: Jest configuration|Test structure|Matchers|Mock functions|Mock modules|Async testing|Snapshots
+React Testing Library: render|screen|getByRole|getByText|getByLabelText|fireEvent|userEvent|waitFor|Testing user behavior
+Unit Testing: Function testing|Component testing|Edge cases|Positive/negative cases|Assertions
+Integration Testing: Component integration|API integration|State integration|Form workflows|Routing workflows
+Playwright: Browser automation|Locators|Assertions|Fixtures|Test configuration|Screenshots|Trace viewer|Cross-browser testing
+E2E Testing: User workflows|Login testing|CRUD testing|Navigation testing|Regression testing|Test isolation
+Mocking API: Mock functions|Mock HTTP requests|MSW|Mock responses|Error simulation|Loading simulation
+#Performance
+Lighthouse: Performance audit|Accessibility audit|SEO audit|Best practices|Lighthouse reports
+Core Web Vitals: LCP|INP|CLS|FCP|TTFB|Performance measurement
+Code Splitting: Route splitting|Component splitting|Dynamic imports|Lazy loading
+Tree Shaking: Dead code elimination|ES Modules|Side effects|Package optimization
+Bundle Optimization: Bundle analysis|Chunk analysis|Dependency analysis|Bundle size reduction|Duplicate dependencies
+Rendering Optimization: Re-render reduction|Memoization|Virtualization|List optimization|Rendering profiling
+Image Optimization: Modern image formats|WebP|AVIF|Responsive images|Lazy loading|Compression
+Network Optimization: HTTP caching|Compression|CDN|Preload|Prefetch|DNS prefetch|Request reduction
+Memory Leak Detection: Heap snapshots|Detached DOM|Event listener leaks|Unclosed subscriptions|Memory profiling
+#Architecture
+Component Architecture: Component responsibilities|Composition|Reusability|Component boundaries|Props API design
+Feature-based Architecture: Feature modules|Module boundaries|Shared modules|Feature isolation|Dependency management
+Reusable Components: Component API|Variants|Composition patterns|Reusable forms|Reusable tables|Reusable modals
+Design Patterns: Container/Presentational|Compound Components|Higher-Order Components|Render Props|Provider Pattern|Factory Pattern|Observer Pattern|Adapter Pattern
+SOLID Principles: Single Responsibility|Open/Closed|Liskov Substitution|Interface Segregation|Dependency Inversion
+Clean Code: Naming conventions|Readability|Function composition|Small functions|Code duplication|Refactoring|Code smells
+Separation of Concerns: UI separation|Business logic separation|API layer|State layer|Utility layer
+Scalable Folder Structure: Feature folders|Components|Hooks|Services|Types|Utils|Constants|Shared modules
+Error Handling Strategy: Error boundaries|Global error handler|API error handling|Logging|Fallback UI|Error recovery
+*Advanced Admin Dashboard
+*E-commerce frontend
+*Role-based Authentication System
+*Complex CRUD Management System
+*Real-time Chat Application
+*Data-heavy Analytics Dashboard
+*Next.js Full-stack Application
+*Reusable Component Library
+*Testing bilan Production-ready Application
+*Performance-optimized Web Application
+@senior|Senior Frontend Developer|Expert / Technical Leadership
+#JavaScript va Browser Internals
+JavaScript Engine Architecture: JavaScript engine qanday ishlaydi?|V8 Engine architecture|Parsing|Abstract Syntax Tree (AST)|Bytecode|Interpreter|JIT Compilation|Optimization|Deoptimization|Garbage Collector|Hidden Classes|Inline Caching
+V8 Engine: V8 architecture|Ignition interpreter|TurboFan compiler|Memory spaces|Heap organization|Optimization pipeline|Execution pipeline
+Garbage Collection Internals: Mark-and-sweep|Mark-and-compact|Scavenger|Generational collection|Incremental marking|Concurrent GC|Memory pressure|GC pauses
+Memory Management: Stack va Heap|Memory allocation|Memory deallocation|Memory leaks|Memory fragmentation|Detached DOM|Heap snapshots|Memory profiling|WeakMap|WeakSet|WeakRef|FinalizationRegistry
+Event Loop Internals: Runtime architecture|Call Stack|Task Queue|Microtask Queue|Rendering opportunities|RequestAnimationFrame|Task scheduling|Long tasks|Event loop performance
+Browser Rendering Pipeline: DOM construction|CSSOM construction|Render Tree|Style calculation|Layout|Paint|Composite|GPU compositing|Reflow|Repaint|Layout thrashing
+Critical Rendering Path: HTML parsing|CSS parsing|JavaScript blocking|Render-blocking resources|Critical CSS|Resource prioritization|Preload|Preconnect|First Contentful Paint|Largest Contentful Paint
+DOM va CSSOM: DOM tree structure|DOM traversal|DOM mutation|CSSOM tree|Style recalculation|DOM performance|Shadow DOM|Virtual DOM comparison
+Web Workers: Dedicated Workers|Shared Workers|Worker communication|postMessage|Structured Clone|Transferable objects|Off-main-thread processing|Worker limitations
+Service Workers: Service Worker lifecycle|Registration|Installation|Activation|Fetch interception|Cache API|Offline functionality|Background Sync|Push notifications|PWA architecture
+Web APIs: Intersection Observer|Resize Observer|Mutation Observer|Performance API|Performance Observer|WebSocket|WebRTC basics|Broadcast Channel|IndexedDB|File API|Streams API|Web Crypto API|Web Components
+Advanced Security: Browser security model|Same-Origin Policy|CORS|CSP|Secure Contexts|Permissions Policy|Sandbox|Origin isolation|Trusted Types
+#Advanced React Architecture
+React Fiber Architecture: Fiber architecture|Fiber nodes|Fiber tree|Work-in-progress tree|Current tree|Alternate fibers|Reconciliation phases|Scheduling|Priority management
+Concurrent Rendering: Concurrent features|Interruptible rendering|Rendering priorities|Transitions|Time slicing concepts|Scheduling|Concurrent UI behavior|Suspense integration
+React Reconciliation Internals: Reconciliation algorithm|Element comparison|Component identity|Key matching|State preservation|State reset|Fiber reconciliation|Commit phase
+Rendering Strategies: Client-side rendering|Server-side rendering|Static rendering|Streaming SSR|Selective hydration|Partial prerendering concepts|Rendering trade-offs|Hybrid rendering
+Server Components Architecture: React Server Components architecture|Server Component boundaries|Client Component boundaries|RSC Payload|Server-to-client serialization|Data fetching architecture|Component composition|Server-only dependencies|RSC limitations
+Hydration Optimization: Hydration architecture|Hydration mismatch|Streaming hydration|Selective hydration|Partial hydration concepts|Hydration performance|Client-side boundaries|Hydration debugging
+Advanced Suspense: Suspense architecture|Suspense boundaries|Nested Suspense|Streaming integration|Fallback strategies|Error Boundary integration|Async rendering|Loading state architecture
+Large-scale State Architecture: Global state architecture|Server state architecture|Client state architecture|State normalization|State ownership|State synchronization|State persistence|Cross-feature communication|State performance
+Design System Architecture: Design tokens|Component foundations|Component API standards|Variants|Theming|Accessibility|Documentation|Versioning|Component governance
+Micro Frontends: Micro frontend concepts|Independent applications|Runtime integration|Build-time integration|Module Federation|Shared dependencies|Routing integration|State communication|Deployment independence|Micro frontend trade-offs
+#Frontend System Design
+Frontend System Design: System requirements|Functional requirements|Non-functional requirements|Architecture diagrams|Component diagrams|Data flow diagrams|Scalability|Maintainability|Reliability|Trade-off analysis
+Scalable Application Architecture: Modular architecture|Feature boundaries|Dependency management|Shared modules|Domain separation|API architecture|State architecture|Error architecture
+Monorepo Architecture: Monorepo concepts|Workspace management|Turborepo|Nx|pnpm Workspaces|Package boundaries|Shared libraries|Build pipelines|Dependency graphs|Caching|Version management
+Micro Frontend Architecture: Independent deployment|Application shell|Remote modules|Host application|Module loading|Routing|Shared state|Shared dependencies|Integration testing
+Module Federation: Webpack Module Federation|Host|Remote|Exposes|Remotes|Shared dependencies|Singleton dependencies|Runtime loading|Version conflicts|Deployment strategies
+Design Systems: Design tokens|Color systems|Typography systems|Spacing systems|Component foundations|Accessibility standards|Theming|Documentation|Component governance
+Component Library Development: Library architecture|Reusable component APIs|Compound components|Polymorphic components|Generic components|Accessibility|Storybook|Visual testing|Semantic versioning|npm publishing|Changelog management
+API Contract Design: API requirements|REST contract|OpenAPI / Swagger|Request schemas|Response schemas|Error schemas|Pagination standards|Versioning|Backward compatibility|Contract testing
+State Architecture: State ownership|State boundaries|Global state|Server state|URL state|Form state|Persistent state|Cross-tab synchronization|State normalization
+Large-scale Application Structure: Domain-driven organization|Feature-based modules|Shared infrastructure|Dependency inversion|Module boundaries|Code ownership|Architectural constraints|Long-term maintainability
+#Advanced Performance
+Core Web Vitals Optimization: LCP optimization|INP optimization|CLS optimization|FCP|TTFB|Real User Monitoring|Lab vs Field data|Performance budgets
+LCP Optimization: LCP element identification|Server response time|Resource load delay|Resource load duration|Element render delay|Image prioritization|Font optimization|Critical resource loading
+INP Optimization: Interaction latency|Input delay|Processing duration|Presentation delay|Long tasks|Main thread blocking|Event handlers optimization|Task splitting
+CLS Optimization: Layout shifts|Image dimensions|Font loading|Dynamic content|Ads and embeds|Reserved space|Layout stability
+Bundle Analysis: Bundle visualization|Dependency analysis|Chunk analysis|Duplicate packages|Tree shaking|Dead code elimination|Bundle budgets|Bundle splitting
+Advanced Code Splitting: Route-based splitting|Component-based splitting|Dynamic imports|Vendor splitting|Chunk prioritization|Prefetching|Preloading
+Runtime Performance: Main thread optimization|JavaScript execution|Rendering performance|DOM operation optimization|Virtualization|Scheduling|Animation performance
+Memory Profiling: Heap snapshots|Allocation timeline|Memory leaks|Detached elements|Retained objects|Garbage collection analysis
+Network Waterfall Analysis: Request waterfall|DNS lookup|TCP connection|TLS handshake|TTFB|Resource priority|HTTP/2|HTTP/3|Compression|Caching|CDN
+Performance Monitoring: Real User Monitoring|Lighthouse CI|Web Vitals reporting|Sentry Performance|Datadog|Performance budgets|Performance regression detection
+#Security
+XSS: Reflected XSS|Stored XSS|DOM-based XSS|Input sanitization|Output encoding|Safe DOM manipulation|React XSS considerations
+CSRF: CSRF concepts|Cross-site requests|CSRF tokens|SameSite cookies|Origin verification|Request validation
+CSP: Content Security Policy|Directives|Nonces|Hashes|Report-only mode|CSP violation reporting
+Clickjacking: Iframe attacks|X-Frame-Options|frame-ancestors|UI redressing
+Secure Authentication: Authentication architecture|Session management|Token lifecycle|Secure cookies|MFA concepts|OAuth 2.0|OpenID Connect|PKCE
+Token Security: Access token|Refresh token|Token expiration|Token rotation|Token storage risks|Replay attacks|Secure transmission
+Dependency Security: Dependency auditing|Vulnerability scanning|npm audit|Supply-chain security|Lockfile management|Package integrity|Dependency updates
+OWASP Basics: OWASP Top 10|Injection|Broken access control|Security misconfiguration|Authentication failures|Cryptographic failures|SSRF concepts|Security logging
+Secure API Integration: HTTPS|Request validation|Response validation|Authentication headers|Sensitive data handling|Error information exposure|Rate limiting awareness
+#DevOps va Infrastructure
+CI/CD: Continuous Integration|Continuous Delivery|Continuous Deployment|Pipeline architecture|Build automation|Test automation|Deployment automation|Pipeline failures
+GitHub Actions: Workflows|Events|Jobs|Steps|Actions|Runners|Secrets|Environment variables|Deployment workflows|Caching dependencies
+Docker Basics: Containers|Images|Dockerfile|Docker Compose|Build|Run|Ports|Volumes|Environment variables|Multi-stage builds
+Deployment Architecture: Development environment|Staging environment|Production environment|Build artifacts|Deployment strategies|Blue-green deployment|Canary deployment|Rollback
+CDN: CDN architecture|Edge servers|Static asset delivery|Cache control|Cache invalidation|CDN configuration|Global distribution
+Environment Management: Environment variables|Development configuration|Staging configuration|Production configuration|Secrets management|Configuration validation
+Monitoring: Application monitoring|Infrastructure monitoring|Uptime monitoring|Performance monitoring|Alerting|Dashboards
+Logging: Structured logging|Client-side logging|Error logging|Log levels|Log aggregation|Sensitive data filtering
+Error Tracking: Sentry|Error reporting|Stack traces|Source maps|Release tracking|Error grouping|User context
+Rollback Strategy: Deployment rollback|Version management|Release tags|Database compatibility|Rollback automation|Incident recovery
+#Testing Architecture
+Testing Strategy: Testing pyramid|Unit testing|Integration testing|E2E testing|Component testing|Contract testing|Risk-based testing
+Test Coverage: Line coverage|Branch coverage|Function coverage|Statement coverage|Coverage thresholds|Coverage limitations
+E2E Architecture: E2E test architecture|Test environments|Test data management|Fixtures|Authentication setup|Parallel testing|Flaky test management
+Visual Regression Testing: Screenshot testing|Baseline images|Pixel comparison|Component visual testing|Responsive visual testing|Chromatic|Percy
+Performance Testing: Load testing|Stress testing|Lighthouse CI|Web Vitals|Network throttling|Performance regression
+CI Testing Pipeline: Lint checks|Type checking|Unit tests|Integration tests|E2E tests|Build validation|Test reporting
+Quality Gates: Code coverage threshold|Type checking|Linting|Security scanning|Build success|Performance budgets|PR approval requirements
+#Leadership
+Code Review: Code review process|Review checklist|Code quality|Security review|Performance review|Constructive feedback|Approval standards
+Mentoring: Junior mentoring|Middle mentoring|Knowledge sharing|Technical guidance|Learning plans|Feedback
+Technical Documentation: Architecture documentation|API documentation|Component documentation|Setup documentation|Troubleshooting guides|Technical specifications
+Task Estimation: Task breakdown|Complexity estimation|Risk identification|Dependencies|Time estimation|Sprint planning
+Technical Decision Making: Technology selection|Architecture trade-offs|Cost-benefit analysis|Technical risks|Long-term impact|Decision documentation
+Architecture Decision Records: ADR concepts|Context|Decision|Alternatives|Consequences|ADR maintenance
+Team Collaboration: Agile methodology|Scrum|Sprint planning|Daily standups|Retrospectives|Cross-team communication|Conflict resolution
+Technical Debt Management: Technical debt identification|Debt prioritization|Refactoring strategy|Legacy code management|Debt tracking|Long-term maintenance
+Problem Solving: Root cause analysis|Debugging complex issues|Systematic investigation|Incident analysis|Trade-off evaluation|Preventive solutions
+Communication: Backend collaboration|UI/UX collaboration|Product manager communication|Requirements clarification|Technical presentations|Stakeholder communication
+*Noldan katta frontend arxitekturasi yaratish
+*Enterprise Admin Dashboard
+*Custom Design System
+*Reusable React Component Library
+*Monorepo asosidagi loyiha
+*Micro Frontend Architecture
+*Advanced Next.js Application
+*CI/CD bilan Production Application
+*Performance Monitoring System
+*Security audit va testing tizimi
+</script>
+
+<script>
+(function(){
+  // ---------- Parse data ----------
+  const levels = [];
+  let L = null, C = null;
+  document.getElementById('data').textContent.split('\n').forEach(raw => {
+    const line = raw.trim(); if (!line) return;
+    if (line[0] === '@') {
+      const [id, title, sub] = line.slice(1).split('|');
+      L = { id, title, sub, cats: [], projects: [] }; levels.push(L);
+    } else if (line[0] === '#') {
+      C = { name: line.slice(1).trim(), topics: [] }; L.cats.push(C);
+    } else if (line[0] === '*') {
+      L.projects.push(line.slice(1).trim());
+    } else {
+      const i = line.indexOf(': ');
+      C.topics.push({ name: line.slice(0, i), items: line.slice(i + 2).split('|') });
+    }
+  });
+  levels.forEach(l => l.cats.forEach((c, ci) => {
+    c.id = l.id + '-c' + ci;
+    c.topics.forEach((t, ti) => { t.id = c.id + '-t' + ti; t.ids = t.items.map((_, ii) => t.id + '-' + ii); });
+  }));
+
+  // ---------- Storage ----------
+  const KEY = 'fe-roadmap-v1';
+  let done = {};
+  try { done = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) { done = {}; }
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(done)); } catch (e) {} };
+
+  const allIds = l => {
+    const ids = [];
+    l.cats.forEach(c => c.topics.forEach(t => ids.push(...t.ids)));
+    l.projects.forEach((_, i) => ids.push(l.id + '-p' + i));
+    return ids;
+  };
+  const count = ids => ids.filter(id => done[id]).length;
+  const pct = ids => ids.length ? Math.round(count(ids) / ids.length * 100) : 0;
+
+  // ---------- State ----------
+  const valid = ['junior', 'middle', 'senior'];
+  let level = valid.includes(location.hash.slice(1)) ? location.hash.slice(1) : 'junior';
+  let query = '', onlyLeft = false;
+
+  const $ = id => document.getElementById(id);
+  const esc = s => s.replace(/[&<>"]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]));
+  const hl = s => {
+    if (!query) return esc(s);
+    const i = s.toLowerCase().indexOf(query);
+    if (i < 0) return esc(s);
+    return esc(s.slice(0, i)) + '<mark>' + esc(s.slice(i, i + query.length)) + '</mark>' + esc(s.slice(i + query.length));
+  };
+
+  // ---------- Ladder ----------
+  function renderLadder() {
+    $('ladder').innerHTML = levels.map(l => {
+      const p = pct(allIds(l));
+      return `<button class="rung" data-go="${l.id}" aria-current="${l.id === level}">
+        <span class="name">${l.title}<span class="sub">${l.sub}</span></span>
+        <span class="bar" aria-hidden="true"><i style="width:${p}%"></i></span>
+        <span class="pct">${p}%</span></button>`;
+    }).join('');
+  }
+
+  // ---------- Main ----------
+  function renderMain() {
+    const l = levels.find(x => x.id === level);
+    document.body.dataset.level = level;
+    let html = '', side = '', shown = 0;
+
+    l.cats.forEach(c => {
+      const catIds = c.topics.flatMap(t => t.ids);
+      let topicsHtml = '';
+      c.topics.forEach(t => {
+        const topicHit = query && t.name.toLowerCase().includes(query);
+        const items = t.items.map((txt, i) => ({ txt, id: t.ids[i] })).filter(it => {
+          if (onlyLeft && done[it.id]) return false;
+          if (query && !topicHit && !it.txt.toLowerCase().includes(query)) return false;
+          return true;
+        });
+        if (!items.length) return;
+        shown++;
+        const d = count(t.ids), n = t.ids.length;
+        topicsHtml += `<details class="topic${d === n ? ' done' : ''}" data-topic="${t.id}"${query ? ' open' : ''}>
+          <summary><span class="t-title">${hl(t.name)}</span>
+            <span class="t-meta"><span class="mini"><i style="width:${d / n * 100}%"></i></span>${d}/${n}</span></summary>
+          <ul class="items">${items.map(it => `<li><label><input type="checkbox" data-id="${it.id}"${done[it.id] ? ' checked' : ''}><span>${hl(it.txt)}</span></label></li>`).join('')}</ul>
+          <div class="t-actions"><button data-all="${t.id}">${d === n ? 'Belgilarni olib tashlash' : 'Hammasini belgilash'}</button></div>
+        </details>`;
+      });
+      if (!topicsHtml) return;
+      const cd = count(catIds);
+      html += `<section class="cat" id="${c.id}"><div class="cat-head"><h2>${esc(c.name)}</h2><span>${cd} / ${catIds.length}</span></div>${topicsHtml}</section>`;
+      side += `<a href="#${level}" data-jump="${c.id}" class="${cd === catIds.length ? 'full' : ''}">${esc(c.name)}<small>${pct(catIds)}%</small></a>`;
+    });
+
+    if (!query && !onlyLeft || (onlyLeft && !query)) {
+      const pr = l.projects.map((p, i) => ({ p, id: l.id + '-p' + i }));
+      html += `<section class="projects" id="${l.id}-projects"><h2>Yakuniy amaliy loyihalar</h2>
+        <p>Darajani yopish uchun bu loyihalarni mustaqil ishlab chiqing.</p>
+        <ol>${pr.map(x => `<li><label><input type="checkbox" data-id="${x.id}"${done[x.id] ? ' checked' : ''}><span>${esc(x.p)}</span></label></li>`).join('')}</ol></section>`;
+      side += `<a href="#${level}" data-jump="${l.id}-projects">Loyihalar<small>${count(pr.map(x => x.id))}/${pr.length}</small></a>`;
+    }
+
+    if (!shown && query) html = `<p class="empty">“${esc(query)}” bo‘yicha mavzu topilmadi. Boshqa so‘z bilan qidiring yoki boshqa darajaga o‘ting.</p>`;
+    else if (!shown && onlyLeft) html = `<p class="empty">Bu darajada qolgan mavzu yo‘q — barchasi belgilangan.</p>` + html;
+
+    $('main').innerHTML = html;
+    $('side').innerHTML = side;
+
+    const tot = allIds(l);
+    $('totalStat').textContent = `${l.title}: ${count(tot)} / ${tot.length} band bajarildi`;
+    $('toggleAll').textContent = 'Hammasini ochish';
+  }
+
+  function renderAll() { renderLadder(); renderMain(); }
+
+  // ---------- Events ----------
+  $('ladder').addEventListener('click', e => {
+    const b = e.target.closest('[data-go]'); if (!b) return;
+    level = b.dataset.go; history.replaceState(null, '', '#' + level);
+    renderAll(); $('main').scrollIntoView({ block: 'start' });
+  });
+
+  $('main').addEventListener('change', e => {
+    const cb = e.target.closest('input[data-id]'); if (!cb) return;
+    if (cb.checked) done[cb.dataset.id] = 1; else delete done[cb.dataset.id];
+    save();
+    const open = [...document.querySelectorAll('details.topic[open]')].map(d => d.dataset.topic);
+    renderAll();
+    open.forEach(id => { const d = document.querySelector(`[data-topic="${id}"]`); if (d) d.open = true; });
+  });
+
+  $('main').addEventListener('click', e => {
+    const b = e.target.closest('[data-all]'); if (!b) return;
+    const l = levels.find(x => x.id === level);
+    let t; l.cats.forEach(c => c.topics.forEach(x => { if (x.id === b.dataset.all) t = x; }));
+    const all = t.ids.every(id => done[id]);
+    t.ids.forEach(id => { if (all) delete done[id]; else done[id] = 1; });
+    save(); renderAll();
+    const d = document.querySelector(`[data-topic="${t.id}"]`); if (d) d.open = true;
+  });
+
+  $('side').addEventListener('click', e => {
+    const a = e.target.closest('[data-jump]'); if (!a) return;
+    e.preventDefault();
+    const el = $(a.dataset.jump); if (el) el.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+  });
+
+  let t0;
+  $('q').addEventListener('input', e => {
+    clearTimeout(t0);
+    t0 = setTimeout(() => { query = e.target.value.trim().toLowerCase(); renderMain(); }, 150);
+  });
+
+  $('onlyLeft').addEventListener('click', e => {
+    onlyLeft = !onlyLeft; e.currentTarget.setAttribute('aria-pressed', onlyLeft); renderMain();
+  });
+
+  $('toggleAll').addEventListener('click', e => {
+    const ds = [...document.querySelectorAll('details.topic')];
+    const openAll = ds.some(d => !d.open);
+    ds.forEach(d => d.open = openAll);
+    e.currentTarget.textContent = openAll ? 'Hammasini yopish' : 'Hammasini ochish';
+  });
+
+  $('reset').addEventListener('click', () => {
+    const l = levels.find(x => x.id === level);
+    if (!confirm(`${l.title} darajasidagi barcha belgilar o‘chiriladi. Davom etasizmi?`)) return;
+    allIds(l).forEach(id => delete done[id]); save(); renderAll();
+  });
+
+  // Theme
+  const root = document.documentElement;
+  try { const th = localStorage.getItem(KEY + '-theme'); if (th) root.dataset.theme = th; } catch (e) {}
+  $('theme').addEventListener('click', () => {
+    const cur = root.dataset.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    root.dataset.theme = cur === 'dark' ? 'light' : 'dark';
+    try { localStorage.setItem(KEY + '-theme', root.dataset.theme); } catch (e) {}
+  });
+
+  window.addEventListener('hashchange', () => {
+    const h = location.hash.slice(1);
+    if (valid.includes(h) && h !== level) { level = h; renderAll(); }
+  });
+
+  renderAll();
+})();
+</script>
+</body>
+</html>
